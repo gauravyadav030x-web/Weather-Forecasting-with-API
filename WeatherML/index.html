@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WeatherML — AI-Powered Forecast</title>
+  <meta name="description" content="ML-powered weather prediction with Claude AI insights, 7-day forecasts, hourly breakdowns, and real-time charts." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+
+</head>
+<body>
+
+<!-- Ambient background -->
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div class="wrapper">
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🌦️</div>
+      <div class="logo-text">Weather<span>ML</span></div>
+    </div>
+    <div class="header-tag">
+      <span class="status-dot dot-green"></span>AI-Analysis
+    </div>
+
+  </header>
+
+  <!-- ── Search ── -->
+  <div class="search-section">
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input
+          class="search-input"
+          id="cityInput"
+          type="text"
+          placeholder="Enter city name (e.g. Mumbai, London, Tokyo)…"
+          autocomplete="off"
+        />
+      </div>
+      <button class="btn btn-primary" id="searchBtn" onclick="fetchWeather()">
+        <span id="btnText">Predict Weather</span>
+        <span id="btnSpinner" class="spinner hidden"></span>
+      </button>
+    </div>
+
+    <div class="quick-cities">
+      <span style="font-size:12px;color:var(--muted);align-self:center;">Quick:</span>
+      <div class="city-pill" onclick="quickCity('Mumbai')">🇮🇳 Mumbai</div>
+      <div class="city-pill" onclick="quickCity('London')">🇬🇧 London</div>
+      <div class="city-pill" onclick="quickCity('Tokyo')">🇯🇵 Tokyo</div>
+      <div class="city-pill" onclick="quickCity('New York')">🇺🇸 New York</div>
+      <div class="city-pill" onclick="quickCity('Dubai')">🇦🇪 Dubai</div>
+      <div class="city-pill" onclick="quickCity('Sydney')">🇦🇺 Sydney</div>
+    </div>
+  </div>
+
+  <!-- ── Empty State ── -->
+  <div id="emptyState">
+    <div class="empty-state">
+      <div class="empty-icon">🌍</div>
+      <div class="empty-title">AI Weather Intelligence</div>
+      <div class="empty-sub">
+        Search any city to get ML-powered predictions, 7-day forecasts,<br />
+        hourly breakdowns, and AI insights powered by Claude.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main Dashboard ── -->
+  <div id="dashboard" class="hidden">
+    <div class="main-grid">
+
+      <!-- Current Weather + ML Confidence -->
+      <div class="card col-wide">
+        <div class="card-label">Current Conditions</div>
+        <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+
+          <div class="weather-hero" style="flex:1;min-width:200px;">
+            <div class="weather-icon-big" id="wIcon">⛅</div>
+            <div class="temp-big" id="wTemp">--<span class="temp-unit">°C</span></div>
+            <div class="city-name" id="wCity">--</div>
+            <div class="weather-desc" id="wDesc">--</div>
+          </div>
+
+          <div style="flex:1;min-width:200px;">
+            <div class="stats-row">
+              <div class="stat-box">
+                <div class="stat-val" id="sHumidity">--%</div>
+                <div class="stat-lbl">Humidity</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val" id="sWind">-- km/h</div>
+                <div class="stat-lbl">Wind</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val" id="sFeels">--°</div>
+                <div class="stat-lbl">Feels Like</div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;">
+              <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">ML Confidence Scores</div>
+              <div class="confidence-bar-wrap">
+                <div class="conf-row"><span>Temperature</span><span class="conf-pct" id="confT">--%</span></div>
+                <div class="bar-track" style="margin-bottom:8px;"><div class="bar-fill bar-blue"   id="barT" style="width:0%"></div></div>
+                <div class="conf-row"><span>Precipitation</span><span class="conf-pct" id="confP">--%</span></div>
+                <div class="bar-track" style="margin-bottom:8px;"><div class="bar-fill bar-purple" id="barP" style="width:0%"></div></div>
+                <div class="conf-row"><span>Wind Pattern</span><span class="conf-pct" id="confW">--%</span></div>
+                <div class="bar-track"><div class="bar-fill bar-green" id="barW" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Atmospheric Extras + UV -->
+      <div class="card">
+        <div class="card-label">Atmospheric Data</div>
+        <div class="extras-grid">
+          <div class="extra-item">
+            <div class="extra-icon">🌡️</div>
+            <div class="extra-val" id="ePressure">-- hPa</div>
+            <div class="extra-lbl">Pressure</div>
+          </div>
+          <div class="extra-item">
+            <div class="extra-icon">👁️</div>
+            <div class="extra-val" id="eVis">-- km</div>
+            <div class="extra-lbl">Visibility</div>
+          </div>
+          <div class="extra-item">
+            <div class="extra-icon">🌅</div>
+            <div class="extra-val" id="eSunrise">--:--</div>
+            <div class="extra-lbl">Sunrise</div>
+          </div>
+          <div class="extra-item">
+            <div class="extra-icon">🌇</div>
+            <div class="extra-val" id="eSunset">--:--</div>
+            <div class="extra-lbl">Sunset</div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">
+            UV Index <span id="uviVal" style="color:var(--text);font-weight:700;">--</span>
+          </div>
+          <div class="uvi-track">
+            <div class="uvi-marker" id="uviMarker" style="left:20%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;">
+            <span>LOW</span><span>MOD</span><span>HIGH</span><span>VERY HIGH</span><span>EXTREME</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7-Day Forecast -->
+      <div class="card col-full">
+        <div class="card-label">7-Day ML Forecast</div>
+        <div class="forecast-row" id="forecastRow"></div>
+      </div>
+
+      <!-- Hourly -->
+      <div class="card col-full">
+        <div class="card-label">Hourly Breakdown (24 h)</div>
+        <div class="hourly-scroll" id="hourlyScroll"></div>
+      </div>
+
+      <!-- Temperature Chart -->
+      <div class="card col-wide">
+        <div class="card-label">Temperature Trend — ML Prediction vs Historical</div>
+        <div class="chart-canvas-wrap">
+          <canvas id="tempChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Precipitation Chart -->
+      <div class="card">
+        <div class="card-label">Precipitation Probability</div>
+        <div class="chart-canvas-wrap">
+          <canvas id="precipChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Claude AI Insight -->
+      <div class="card col-full">
+        <div class="card-label" style="margin-bottom:12px;">✨ AI Analysis</div>
+        <div class="ai-output" id="aiOutput">Awaiting weather data to generate AI insights…</div>
+        <div class="ai-btn-row">
+          <button class="btn btn-primary" onclick="triggerAI('detailed')" style="font-size:13px;padding:10px 18px;">
+            📊 Deep Analysis
+          </button>
+          <button class="btn btn-primary btn-purple" onclick="triggerAI('travel')" style="font-size:13px;padding:10px 18px;">
+            ✈️ Travel Advisory
+          </button>
+          <button class="btn btn-primary btn-green" onclick="triggerAI('health')" style="font-size:13px;padding:10px 18px;">
+            💊 Health Impact
+          </button>
+          <a href="AI Features/index.html"style="text-decoration: none; color:inherite;"
+          <button class="btn btn-primary btn-green" onclick="triggerAI('health')" style="font-size:13px;padding:10px 18px;">
+             🤖 Ai-Features
+          </button>
+            </a>
+        </div>
+      </div>
+    </div>
+  </div><!-- /dashboard -->
+
+</div><!-- /wrapper -->
+
+<!-- Chart.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<!-- App modules (order matters) -->
+<script src="js/weather.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/ui.js"></script>
+
+</body>
+</html>

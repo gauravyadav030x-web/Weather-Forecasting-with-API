@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Weather AI | Next-Gen Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <main class="container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-cloud-bolt"></i>
+                <h1>WEATHER<span>AI</span></h1>
+            </div>
+            <p class="subtitle">Advanced Machine Learning Weather Prediction</p>
+        </header>
+
+        <div class="app-layout">
+            <section class="input-panel glass-panel">
+                <h2><i class="fa-solid fa-sliders"></i> Environmental Metrics</h2>
+                <form id="prediction-form">
+                    <div class="input-group">
+                        <label for="temperature">
+                            <i class="fa-solid fa-temperature-half"></i> Temperature (°C)
+                        </label>
+                        <input type="number" id="temperature" name="temperature" step="0.1" value="22.5" required>
+                        <div class="range-slider">
+                            <input type="range" min="-20" max="50" value="22.5" class="slider" id="temp-slider">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="humidity">
+                            <i class="fa-solid fa-droplet"></i> Humidity (%)
+                        </label>
+                        <input type="number" id="humidity" name="humidity" step="1" min="0" max="100" value="65" required>
+                        <div class="range-slider">
+                            <input type="range" min="0" max="100" value="65" class="slider" id="hum-slider">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="pressure">
+                            <i class="fa-solid fa-gauge-high"></i> Pressure (hPa)
+                        </label>
+                        <input type="number" id="pressure" name="pressure" step="1" value="1012" required>
+                        <div class="range-slider">
+                            <input type="range" min="950" max="1050" value="1012" class="slider" id="pres-slider">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="wind_speed">
+                            <i class="fa-solid fa-wind"></i> Wind Speed (km/h)
+                        </label>
+                        <input type="number" id="wind_speed" name="wind_speed" step="0.1" min="0" value="15" required>
+                        <div class="range-slider">
+                            <input type="range" min="0" max="150" value="15" class="slider" id="wind-slider">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="glow-button" id="predict-btn">
+                        <span>Run AI Analysis</span>
+                        <i class="fa-solid fa-microchip"></i>
+                    </button>
+                </form>
+            </section>
+
+            <section class="output-panel glass-panel">
+                <h2><i class="fa-solid fa-satellite-dish"></i> Prediction Result</h2>
+                
+                <div id="loading-state" class="hidden">
+                    <div class="spinner">
+                        <div class="double-bounce1"></div>
+                        <div class="double-bounce2"></div>
+                    </div>
+                    <p>Processing neural pathways...</p>
+                </div>
+
+                <div id="result-state">
+                    <div class="weather-icon-container" id="weather-icon-display">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <h3 class="prediction-text" id="prediction-output">Awaiting Data</h3>
+                    
+                    <div class="confidence-meter hidden" id="confidence-container">
+                        <div class="meter-header">
+                            <span>AI Confidence Level</span>
+                            <span id="confidence-value">0%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill" id="confidence-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="system-logs">
+                        <h4>System Status</h4>
+                        <ul id="log-list">
+                            <li><i class="fa-solid fa-check-circle"></i> System initialized.</li>
+                            <li><i class="fa-solid fa-check-circle"></i> Waiting for user input...</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
